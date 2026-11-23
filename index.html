@@ -12,38 +12,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- CRT scanline overlay -->
-    <div class="crt-overlay" aria-hidden="true"></div>
     <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
 
-    <!-- Terminal Loading Screen -->
-    <div class="terminal-loader" id="terminalLoader">
-        <div class="terminal-content loader-window">
-            <div class="terminal-header">
-                <div class="terminal-buttons">
-                    <span class="btn close"></span>
-                    <span class="btn minimize"></span>
-                    <span class="btn maximize"></span>
-                </div>
-                <div class="terminal-title">boot@SAHIL — init.d</div>
-            </div>
-            <div class="terminal-body">
-                <pre class="ascii-art" id="asciiArt"></pre>
-                <div class="terminal-line">
-                    <span class="prompt">root@SAHIL</span><span class="path">:~$</span>
-                    <span class="command" id="bootCommand"></span><span class="boot-cursor">▌</span>
-                </div>
-                <div class="terminal-output" id="bootOutput"></div>
-                <div class="boot-progress">
-                    <div class="boot-progress-bar" id="bootProgressBar"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Matrix Background -->
-    <canvas id="matrixCanvas" class="matrix-bg"></canvas>
     <div class="grid-bg" aria-hidden="true"></div>
+    <div class="ambient-orbs" aria-hidden="true">
+        <span class="ambient-orb orb-one"></span>
+        <span class="ambient-orb orb-two"></span>
+    </div>
 
     <!-- Scroll progress -->
     <div class="scroll-progress" id="scrollProgress"></div>
@@ -51,6 +26,16 @@
     <!-- Navigation -->
     <nav class="nav-container" id="navContainer">
         <div class="nav-left">
+            <!-- From Uiverse.io by Valeron-T - https://uiverse.io/Valeron-T/happy-wolverine-36
+                 MIT License, Copyright (c) mrhyddenn, Valeron-T (Valeron ) -->
+            <div class="nav-radar-loader" aria-hidden="true">
+                <span class="nav-radar-loader__sweep"></span>
+                <span class="nav-radar-loader__dot nav-radar-loader__dot--1"></span>
+                <span class="nav-radar-loader__dot nav-radar-loader__dot--2"></span>
+                <span class="nav-radar-loader__dot nav-radar-loader__dot--3"></span>
+                <span class="nav-radar-loader__dot nav-radar-loader__dot--4"></span>
+                <span class="nav-radar-loader__dot nav-radar-loader__dot--5"></span>
+            </div>
             <a href="#home" class="logo-terminal">
                 <span class="logo-bracket">&lt;</span>
                 <span class="logo-text">SAHIL</span>
@@ -59,25 +44,23 @@
         </div>
         <div class="nav-center">
             <div class="nav-menu" id="navMenu">
-                <a href="#home" class="nav-link" data-section="home"><i class="fas fa-home"></i><span>./home</span></a>
-                <a href="#about" class="nav-link" data-section="about"><i class="fas fa-user"></i><span>./about</span></a>
+                <a href="#home" class="nav-link" data-section="home"><i class="fas fa-user"></i><span>./about</span></a>
                 <a href="#projects" class="nav-link" data-section="projects"><i class="fas fa-code"></i><span>./projects</span></a>
                 <a href="#skills" class="nav-link" data-section="skills"><i class="fas fa-microchip"></i><span>./skills</span></a>
                 <a href="#experience" class="nav-link" data-section="experience"><i class="fas fa-briefcase"></i><span>./exp</span></a>
-                <a href="#contact" class="nav-link" data-section="contact"><i class="fas fa-envelope"></i><span>./contact</span></a>
             </div>
         </div>
         <div class="nav-right">
-            <button class="nav-btn" id="cmdPaletteBtn" title="Command palette (Ctrl+K)">
-                <i class="fas fa-terminal"></i>
-                <kbd>Ctrl+K</kbd>
-            </button>
-            <button class="nav-btn theme-toggle" id="themeToggle" title="Toggle theme">
-                <i class="fas fa-moon"></i>
-            </button>
-            <button class="nav-btn matrix-toggle" id="matrixToggle" title="Toggle matrix">
-                <i class="fas fa-th"></i>
-            </button>
+            <!-- From Uiverse.io by pandey_saurav_ - https://uiverse.io/pandey_saurav_/friendly-insect-59
+                 MIT License, Copyright (c) pandey_saurav_ (Saurav Pandey) -->
+            <input class="theme-switch__input" id="themeToggle" type="checkbox" aria-label="Toggle light theme">
+            <label class="theme-switch" for="themeToggle" title="Toggle theme">
+                <svg class="theme-switch__bulb" xml:space="preserve" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M77.547 120.684h-5.765l-1.698 3.012a7.477 7.477 0 0 1-6.513 3.804h-.003a7.479 7.479 0 0 1-6.513-3.804l-1.698-3.012h-5.765v-4.06h27.956v4.06z" style="fill:#51514c"></path>
+                    <path d="M77.547 113.65H49.591v-4.279h27.956v4.279zm0-11.711H49.591v4.279h27.956v-4.279zm38.587-32.576-12.209-3.271.92-3.434 12.209 3.271-.92 3.434zm-104.268 0-.92-3.434 12.209-3.271.92 3.434-12.209 3.271zm92.979-24.913-.92-3.434 12.209-3.272.92 3.434-12.209 3.272zm-81.69 0-12.209-3.272.92-3.434 12.209 3.272-.92 3.434zM94.82 25.247l-2.514-2.514 8.938-8.938 2.514 2.514-8.938 8.938zm-61.64 0-8.937-8.938 2.514-2.514 8.937 8.938-2.514 2.514zm43.358-11.618-3.434-.92L76.376.5l3.434.92-3.272 12.209zm-25.076 0L48.191 1.42 51.625.5l3.272 12.209-3.435.92z" style="fill:#a7a79b"></path>
+                    <path d="M59.802 64.141h7.535v34.934h-7.535V64.141zm3.767-44.754c-18.485-.53-33.631 14.817-33.631 33.824 0 9.781 4.016 18.581 10.431 24.753 5.637 5.423 9.222 13.147 9.222 21.111h7.84V64.141H51.75c-4.44 0-8.051-3.612-8.051-8.051s3.612-8.051 8.051-8.051 8.052 3.612 8.052 8.051v5.681h7.535V56.09c0-4.44 3.612-8.051 8.052-8.051 4.44 0 8.051 3.612 8.051 8.051s-3.612 8.051-8.051 8.051h-5.682v34.934h7.84c0-7.964 3.584-15.688 9.222-21.111C93.184 71.792 97.2 62.992 97.2 53.211c0-19.008-15.146-34.355-33.631-33.824zM51.75 50.408a5.687 5.687 0 0 0-5.681 5.681 5.687 5.687 0 0 0 5.681 5.681h5.682v-5.681a5.688 5.688 0 0 0-5.682-5.681zM75.389 61.77h-5.682v-5.681a5.688 5.688 0 0 1 5.682-5.681 5.687 5.687 0 0 1 5.681 5.681 5.687 5.687 0 0 1-5.681 5.681z" style="fill:#ffffff"></path>
+                </svg>
+            </label>
             <button class="menu-toggle" id="menuToggle" aria-label="Menu">
                 <span></span><span></span><span></span>
             </button>
@@ -116,7 +99,7 @@
         <section class="hero-section section-reveal" id="home">
             <div class="hero-badge">
                 <span class="pulse-dot"></span>
-                <span>SYSTEM ONLINE — v2.0</span>
+                <span>SAHIL PORTFOLIO</span>
             </div>
             <div class="hero-content">
                 <div class="hero-terminal glass-panel">
@@ -126,7 +109,19 @@
                             <span class="btn minimize"></span>
                             <span class="btn maximize"></span>
                         </div>
-                        <div class="terminal-title">about@SAHIL — bash</div>
+                        <div class="terminal-title hero-terminal__title">
+                            <!-- From Uiverse.io by htwarriors108 - https://uiverse.io/htwarriors108/massive-dodo-50
+                                 MIT License, Copyright (c) htwarriors108 (HT WARRIORS) -->
+                            <div class="hero-terminal-cube" aria-hidden="true">
+                                <div class="hero-terminal-cube__face hero-terminal-cube__face--front"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+                                <div class="hero-terminal-cube__face hero-terminal-cube__face--back"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+                                <div class="hero-terminal-cube__face hero-terminal-cube__face--right"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+                                <div class="hero-terminal-cube__face hero-terminal-cube__face--left"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+                                <div class="hero-terminal-cube__face hero-terminal-cube__face--top"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+                                <div class="hero-terminal-cube__face hero-terminal-cube__face--bottom"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+                            </div>
+                            <span>about@SAHIL — bash</span>
+                        </div>
                     </div>
                     <div class="terminal-body">
                         <div class="typing-text">
@@ -135,43 +130,23 @@
                             <span class="cursor">▌</span>
                         </div>
                         <div class="terminal-stats">
-                            <div class="stat-line">
-                                <span class="prompt">$</span>
-                                <span>cat developer.json | jq</span>
-                            </div>
                             <div class="stat-content">
-                                <p><span class="key">"name":</span> <span class="value">"SAHIL"</span></p>
-                                <p><span class="key">"role":</span> <span class="value">"Full Stack Developer"</span></p>
-                                <p><span class="key">"focus":</span> <span class="value">"Creative Solutions & Automation"</span></p>
-                                <p><span class="key">"status":</span> <span class="value status-online">"● available_for_hire"</span></p>
-                                <p><span class="key">"location":</span> <span class="value">"Pune, Maharashtra, India"</span></p>
+                                <p><span class="key">"name":</span> <span class="value">SAHIL KADAM</span></p>
+                                <p><span class="key">"role":</span> <span class="value">Full Stack Developer</span></p>
+                                <p><span class="key">"focus":</span> <span class="value">Creative Solutions & Automation</span></p>
+                                <p><span class="key">"location":</span> <span class="value">Pune, Maharashtra, India</span></p>
                             </div>
                         </div>
                         <div class="hero-actions">
                             <a href="#projects" class="btn-primary"><i class="fas fa-folder-open"></i> View Projects</a>
-                            <button class="btn-secondary" id="openTerminalBtn"><i class="fas fa-terminal"></i> Open CLI</button>
+                            <a href="#experience" class="btn-secondary"><i class="fas fa-briefcase"></i> Experience</a>
                             <a href="https://github.com/Savage404E" class="btn-ghost" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a>
+                            <a href="https://www.instagram.com/_sahilkadam/" class="btn-ghost" target="_blank" rel="noopener"><i class="fab fa-instagram"></i> Instagram</a>
                         </div>
                     </div>
                 </div>
                 <div class="hero-visual">
-                    <div class="orbit-ring">
-                        <div class="orbit-dot"></div>
-                        <div class="orbit-dot delay-1"></div>
-                        <div class="orbit-dot delay-2"></div>
-                    </div>
-                    <div class="profile-hexagon">
-                        <div class="hex-glow"></div>
-                        <div class="hex-content">
-                            <i class="fas fa-code"></i>
-                        </div>
-                    </div>
-                    <div class="floating-tags">
-                        <span class="float-tag">JS</span>
-                        <span class="float-tag">Python</span>
-                        <span class="float-tag">React</span>
-                        <span class="float-tag">Node</span>
-                    </div>
+                    <img class="hero-illustration" src="developer-at-desk.png" alt="Developer sitting at a desk beside a computer">
                 </div>
             </div>
         </section>
@@ -181,18 +156,13 @@
             <div class="stats-grid" id="statsGrid">
                 <div class="stat-card glass-panel">
                     <div class="stat-icon"><i class="fas fa-rocket"></i></div>
-                    <div class="stat-number" data-target="8">0</div>
+                    <div class="stat-number" data-target="4">0</div>
                     <div class="stat-label">Projects Built</div>
                 </div>
                 <div class="stat-card glass-panel">
                     <div class="stat-icon"><i class="fas fa-code-branch"></i></div>
                     <div class="stat-number" data-target="3">0</div>
                     <div class="stat-label">Years Coding</div>
-                </div>
-                <div class="stat-card glass-panel">
-                    <div class="stat-icon"><i class="fas fa-users"></i></div>
-                    <div class="stat-number" data-target="18000">0</div>
-                    <div class="stat-label">Discord Community</div>
                 </div>
                 <div class="stat-card glass-panel">
                     <div class="stat-icon"><i class="fas fa-mug-hot"></i></div>
@@ -205,7 +175,7 @@
         <!-- Projects -->
         <section class="projects-section section-reveal" id="projects">
             <div class="section-header">
-                <h2 class="section-title"><span class="prompt">$</span> ls -la projects/</h2>
+                <h2 class="section-title"><span class="prompt">$</span> projects</h2>
                 <p class="section-subtitle">Filter by status · Click a card for details</p>
                 <div class="section-line"></div>
             </div>
@@ -214,7 +184,6 @@
                 <button class="filter-btn" data-filter="Active">active</button>
                 <button class="filter-btn" data-filter="Completed">completed</button>
                 <button class="filter-btn" data-filter="In Progress">in-progress</button>
-                <button class="filter-btn" data-filter="Planning">planning</button>
             </div>
             <div class="projects-grid" id="projectsGrid"></div>
         </section>
@@ -223,16 +192,9 @@
         <section class="skills-section section-reveal" id="skills">
             <div class="section-header">
                 <h2 class="section-title"><span class="prompt">$</span> Dev skills.txt</h2>
-                <p class="section-subtitle">Filter by stack · No rankings, just tools I use</p>
                 <div class="section-line"></div>
             </div>
             <div class="skills-container">
-                <div class="skill-categories" id="skillCategories">
-                    <div class="skill-category active" data-category="all"><i class="fas fa-layer-group"></i> All</div>
-                    <div class="skill-category" data-category="frontend"><i class="fab fa-html5"></i> Frontend</div>
-                    <div class="skill-category" data-category="backend"><i class="fas fa-server"></i> Backend</div>
-                    <div class="skill-category" data-category="tools"><i class="fas fa-wrench"></i> Tools</div>
-                </div>
                 <div class="skills-grid" id="skillsGrid"></div>
             </div>
         </section>
@@ -240,57 +202,39 @@
         <!-- Experience -->
         <section class="experience-section section-reveal" id="experience">
             <div class="section-header">
-                <h2 class="section-title"><span class="prompt">$</span> git log --oneline experience</h2>
+                <h2 class="section-title"><span class="prompt">$</span> experience</h2>
                 <div class="section-line"></div>
             </div>
-            <div class="timeline" id="timeline"></div>
-        </section>
-
-        <!-- Contact -->
-        <section class="contact-section section-reveal" id="contact">
-            <div class="section-header">
-                <h2 class="section-title"><span class="prompt">$</span> ./contact.sh --connect</h2>
-                <div class="section-line"></div>
-            </div>
-            <div class="contact-container">
-                <div class="contact-info">
-                    <div class="info-terminal glass-panel">
-                        <div class="terminal-header">
-                            <div class="terminal-buttons">
-                                <span class="btn close"></span>
-                                <span class="btn minimize"></span>
-                                <span class="btn maximize"></span>
-                            </div>
-                            <div class="terminal-title">info@SAHIL — links</div>
-                        </div>
-                        <div class="terminal-body">
-                            <div class="info-line">
-                                <span class="prompt">$</span>
-                                <span>cat social_links.txt</span>
-                            </div>
-                            <div class="social-links">
-                                <a href="https://github.com/Savage404E" class="social-link" target="_blank" rel="noopener">
-                                    <i class="fab fa-github"></i><span>GitHub</span><i class="fas fa-arrow-right link-arrow"></i>
-                                </a>
-                                <a href="https://www.linkedin.com/in/sahil-kadam-473096383/" class="social-link" target="_blank" rel="noopener">
-                                    <i class="fab fa-linkedin"></i><span>LinkedIn</span><i class="fas fa-arrow-right link-arrow"></i>
-                                </a>
-                                <a href="https://discord.gg/besavage" class="social-link" target="_blank" rel="noopener">
-                                    <i class="fab fa-discord"></i><span>Discord Server (18K+ community)</span><i class="fas fa-arrow-right link-arrow"></i>
-                                </a>
-                                <a href="mailto:sahil22kadam@gmail.com" class="social-link">
-                                    <i class="fas fa-envelope"></i><span>Email</span><i class="fas fa-arrow-right link-arrow"></i>
-                                </a>
-                            </div>
-                            <div class="quick-cmd-hint">
-                                <span class="prompt">$</span>
-                                <span>hint: press <kbd>Ctrl+K</kbd> or type <code>help</code> in the CLI below</span>
-                            </div>
-                        </div>
+            <div class="timeline" id="timeline">
+                <div class="timeline-cube-loader" aria-hidden="true">
+                    <div class="timeline-cube-loader__loop timeline-cube-loader__loop--top">
+                        <div class="timeline-cube-loader__item"></div>
+                        <div class="timeline-cube-loader__item"></div>
+                        <div class="timeline-cube-loader__item"></div>
+                        <div class="timeline-cube-loader__item"></div>
+                        <div class="timeline-cube-loader__item"></div>
+                        <div class="timeline-cube-loader__item"></div>
+                    </div>
+                    <div class="timeline-cube-loader__loop timeline-cube-loader__loop--middle">
+                        <div class="timeline-cube-loader__item"></div>
+                        <div class="timeline-cube-loader__item"></div>
+                        <div class="timeline-cube-loader__item"></div>
+                        <div class="timeline-cube-loader__item"></div>
+                        <div class="timeline-cube-loader__item"></div>
+                        <div class="timeline-cube-loader__item"></div>
+                    </div>
+                    <div class="timeline-cube-loader__loop timeline-cube-loader__loop--bottom">
+                        <div class="timeline-cube-loader__item"></div>
+                        <div class="timeline-cube-loader__item"></div>
+                        <div class="timeline-cube-loader__item"></div>
+                        <div class="timeline-cube-loader__item"></div>
+                        <div class="timeline-cube-loader__item"></div>
+                        <div class="timeline-cube-loader__item"></div>
                     </div>
                 </div>
             </div>
         </section>
+
     </main>
 
     <!-- Interactive CLI Dock -->
@@ -321,8 +265,26 @@
         <div class="footer-terminal glass-panel">
             <div class="terminal-body">
                 <div class="footer-line">
-                    <span class="prompt">$</span>
-                    <span>echo "© 2026 SAHIL Portfolio | Built with passion · Press <kbd>Ctrl+K</kbd> anywhere"</span>
+                    <span class="footer-loader" aria-hidden="true"></span>
+                    <span>Hello © 2026 SAHIL Portfolio | Coding is my passion</span>
+                    <button class="footer-go-up" id="backToTop" type="button" title="Go to top">
+                        <span class="footer-go-up__ripple" aria-hidden="true"></span>
+                        <span class="footer-go-up__shape footer-go-up__shape--left" aria-hidden="true">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 487 487">
+                                <path fill-opacity=".1" fill-rule="nonzero" fill="#FFF" d="M0 .3c67 2.1 134.1 4.3 186.3 37 52.2 32.7 89.6 95.8 112.8 150.6 23.2 54.8 32.3 101.4 61.2 149.9 28.9 48.4 77.7 98.8 126.4 149.2H0V.3z"></path>
+                            </svg>
+                        </span>
+                        <span class="footer-go-up__shape footer-go-up__shape--right" aria-hidden="true">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 487 487">
+                                <path fill-opacity=".1" fill-rule="nonzero" fill="#FFF" d="M487 486.7c-66.1-3.6-132.3-7.3-186.3-37s-95.9-85.3-126.2-137.2c-30.4-51.8-49.3-99.9-76.5-151.4C70.9 109.6 35.6 54.8.3 0H487v486.7z"></path>
+                            </svg>
+                        </span>
+                        <span class="footer-go-up__gradient" aria-hidden="true"></span>
+                        <span class="footer-go-up__content">
+                            <i class="fas fa-arrow-up" aria-hidden="true"></i>
+                            <span>GO UPWARD</span>
+                        </span>
+                    </button>
                 </div>
             </div>
         </div>
